@@ -1,0 +1,124 @@
+// When reinstalling Arch:
+# 00. Set Samsung screen: blue light to 0%; red 60%; green 55%
+# 0. Note: give /home a separate partition. give / 4GB and /home the rest. Either name the user the same name as the old user; or rename /home/elias before installation.
+# 1. Install Arch from [arch-install.txt] script
+# 2. ALWAYS restore files using same backup command (rsync)
+# 3. make: highlighter
+# 4. don't use snapd. Don't be enslaved/hooked/addicted to updates nor to 3rd party companies.
+# 5. nautilus-typeahead: (download it from AUR as the community version 3.34.0-1 with sudo pacman -S nautilus-typeahead is broken):
+	nautilus-typeahead  3.34.2-1 # install gnome-terminal-transparency then reboot to enable terminal opening
+	# view Modified date below files; not size (from settings)
+# 6. install apps below
+# 7. enable scrollbars: add this line to ~/.config/gtk-3.0/settings.ini
+	gtk-overlay-scrolling=0
+	gtk-primary-button-warps-slider=1
+# 8. set notifications settings:
+	mkdir ~/.config/dunst && cp /usr/share/dunst/dunstrc ~/.config/dunst
+# 9. pcmanfm preferences -> volume management -> show available options.. [disable]
+# 11. sudo vim /boot/loader/loader.conf # reduce grub bootloader countdown to 1; this is for [systemd-boot] bootloader (shows 2 options in mid screen).
+      # for GRUB: sudo vim /boot/grub/grub.cfg # look for timeout. see: https://bbs.archlinux.org/viewtopic.php?id=251950
+# 12. update calculator icon (all this is not needed anymore):
+sudo rm -f /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
+sudo cp /usr/share/icons/hicolor/scalable/apps/org.gnome.Calculator.svg /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
+# change ones you don't like eg:
+# sudo rm /usr/share/icons/breeze/apps/48/okular.svg
+# sudo rm /usr/share/icons/breeze-dark/apps/48/okular.svg
+# sudo cp firefox.png /usr/share/icons/elementary-xfce/apps/128/
+
+sudo rm /usr/share/icons/hicolor/256x256/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/128x128/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/64x64/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/48x48/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/32x32/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/24x24/apps/chromium.png
+sudo rm /usr/share/icons/hicolor/16x16/apps/chromium.png
+
+# 13. dconf > /org/gnome/gnome-screenshot/auto-save-directory > file:///home/elias/Downloads
+
+pip uninstall pip # remove it from all existing conda environments
+
+// AUR:
+perl-goo-canvas  0.06-11 # required for shutter
+alarm-clock-applet
+elementary-xfce-icons 0.14.1  # ICONS. or manually put in ~/.icons: https://github.com/shimmerproject/elementary-xfce/
+xfce-theme-greybird 3.22.10-1 # THEME. or manually put in ~/.themes: https://github.com/shimmerproject/Greybird/
+fslint # http://www.pixelbeat.org/fslint/
+teamviewer
+gnome-terminal-transparency # normal gnome-terminal does not have transparency enabled 
+blugon # blue light removal (also redshift)
+libinput-multiplier # mouse scrolling speed https://aur.archlinux.org/packages/libinput-multiplier/ https://wiki.archlinux.org/index.php/Libinput#Mouse_wheel_scrolling_speed_scaling or install [imwheel] https://wiki.archlinux.org/index.php/IMWheel. installing [libinput-multiplier] requires removing [libinput] which is safe.
+
+// Manually install:
+firefox-esr: # https://www.mozilla.org/en-US/firefox/all/#product-desktop-esr; unzip then sudo cp -r ./firefox ~/.local/bin/
+gradio: # https://github.com/haecker-felix/gradio/releases/ # successor: https://gitlab.gnome.org/World/Shortwave # Or use VLC
+e2guardian: # https://github.com/e2guardian/e2guardian/releases https://groups.google.com/forum/#!topic/e2guardian/M8s4i9ggPbI
+awesome: # https://github.com/awesomewm/awesome
+
+// Programs:
+sudo pacman -S audacity calibre catfish chromium dconf-editor dunst easytag eog evince ffmpegthumbnailer gedit gnote gparted gimp git gnome-font-viewer gnome-calculator gnome-disk-utility gnome-system-monitor gnome-calendar inkscape keepassxc kdenlive kid3 libreoffice mtpfs gvfs-mtp okular oath-toolkit pdfarranger rsync slock texstudio texlive-most thunderbird vim vlc xdotool xclip youtube-dl ntp colordiff feh simplescreenrecorder picom digikam rofi shutter
+
+// Description of some programs above:
+calibre # epub reading & converting to pdf
+catfish # search file content
+colordiff # diff files with colour
+chromium # printing pages with links + testing html
+dunst # notifications daemon (volume control) (notify-send message)
+evince # acts as pdf thumbnailer
+eog # eye of gnome image viewer
+feh # set wallpaper in awesome
+ffmpegthumbnailer # mp4 thumbnails
+gnote # might be a fork from [tomboy]. # also see: https://github.com/nuttyartist/notes
+pdfarranger # pdfshuffler on ubuntu
+kid3 # audio tagger. similar to [easytag] & [picard]
+mtpfs gvfs-mtp # both required for browsing android device
+ntp # time and date protocol
+picom # window shadow compositor
+slock # better than xscreensaver which can be circumvented
+texstudio # (latex)
+texlive-most # select all
+vlc # use it for radio too (bbcr3 + classicfm). Also: [rhythmbox], [cantata], [github.com/audacious-media-player/audacious], [github.com/exaile/exaile/] https://code.videolan.org/videolan/vlc/raw/master/NEWS
+xdotool # pasting date
+xclip   # pasting date (copy into clipboard)
+digikam # more advanced than [shotwell]
+okular # bug: https://bugs.kde.org/show_bug.cgi?id=305534 https://gitlab.freedesktop.org/poppler/poppler/-/issues/362
+shutter # best available screenshot app. gnome-screenshot # better than xfce4-screenshooter. gnome-screenshot -a # area. gnome-screenshot -i # interactive
+
+// Other:
+linux53-virtualbox-host-modules # 5x has to match your kernel; see: https://forum.manjaro.org/t/howto-virtualbox-installation-usb-shared-folders/55905
+virtualbox
+virtualbox-host-dkms
+optipng # optimise/compress pngs
+jpegoptim # optimise/compress jpegs
+hdparm # send an HDD into sleeping mode
+gnome-do # change to [kupfer] which is better when updated beyond v319: https://github.com/kupferlauncher/kupfer/releases Now using [rofi] the best https://wiki.archlinux.org/title/Rofi#Configuration
+darktable # photo management (similar to adobe lightroom). (I'm not using it)
+orage # simple calendar. another exists in lxpanel if using LXDE. Awesomewm contains calendar
+cbatticon # Lenovo battery icon (not needed, percentage can be displayed in awesome)
+parcellite # [UPDATE: NOT REQUIRED as long as lxsession is running along awesomewm] (copy does not persist in awesomewm after a window is closed). Clipman is the XFCE clipboard manager. See: https://wiki.archlinux.org/index.php/clipboard#Managers 
+sudo pacman -S base-devel # ubuntu equivalent: build-essential; includes g++ (cpp compiler)
+sudo pacman -S cmake htop qtcreator
+ubuntu-restricted-extras # ubuntu, installs Microsoft Web fonts
+lm-sensors # show cpu temperature; command: 'sensors'
+xautomation # installs xte; unsupported on wayland. remap mouse buttons, see [.xbindkeysrc]
+xinput # to listen to mouse/powerbutton/... clicks, see [.xbindkeysrc]
+xournal
+sudo pacman -S dnsutils # host youtube.com
+sudo pacman -S whois # whois youtube.com
+lxappearance # (not needed). install for changing themes/icon themes on Awesomewm. or see: https://wiki.archlinux.org/index.php/Cursor_themes#XDG_specification
+lxsession # required for authentication for pamac under awesomewm
+qutebrowser # keyboard navigation browser. Samir's. similar to firefox's Vimperator (discontinued)
+veracrypt
+xattr # 0.8.0 file attributes: https://pypi.python.org/pypi/xattr
+ImportExportTools # exporting emails in Thunderbird https://freeshell.de/~kaosmos/mboximport-en.html
+rEFInd # Boot Manager (install OSX on PC) http://www.rodsbooks.com/refind/
+rhythmbox-plugin-playlists-import-export # https://github.com/petko10/rhythmbox-plugin-playlists-import-export
+rhythmbox-plugins-open-containing-folder # https://github.com/donaghhorgan/rhythmbox-plugins-open-containing-folder
+tomboy # https://github.com/tomboy-notes/tomboy
+notes # similar to macos https://github.com/nuttyartist/notes
+gnote # https://wiki.gnome.org/Apps/Gnote
+motion # camera surveillance motion detector https://github.com/Motion-Project/motion https://www.linux.com/learn/how-operate-linux-spycams-motion https://apps.ubuntu.com/cat/applications/natty/zoneminder/
+dash-to-panel # for gnome https://github.com/home-sweet-gnome/dash-to-panel
+papirus-icon-theme # https://github.com/PapirusDevelopmentTeam/papirus-icon-theme
+elementary-icons # https://github.com/elementary/icons
+elementary-wallpapers # https://github.com/elementary/wallpapers
+

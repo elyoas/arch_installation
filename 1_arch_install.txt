@@ -1,12 +1,14 @@
 // Lenovo note:
-# to run Arch, you have to disable 'secure boot' from BIOS. You can then put the ssd directly from PC and it will work.
+# to run Arch, you have to disable 'secure boot' from BIOS. You can then put the
+#  ssd directly from PC and it will work.
 
 // 0. Installation instructions & iso download:
 https://wiki.archlinux.org/index.php/Installation_guide
 
 https://www.archlinux.org/download/ # download iso
 pacman-key -v archlinux-version-x86_64.iso.sig # verify signature:
-sudo dd bs=4M if=archlinux-2020.12.01-x86_64.iso of=/dev/sdb1 status=progress oflag=sync # create bootable flash disk 
+sudo dd bs=4M if=archlinux-2020.12.01-x86_64.iso of=/dev/sdb1 status=progress 
+ oflag=sync # create bootable flash disk 
 https://wiki.archlinux.org/title/USB_flash_installation_medium#Using_basic_command_line_utilities
 
 # other sources:
@@ -19,19 +21,22 @@ https://wiki.archlinux.org/index.php/Arch_boot_process
 
 // 1. partition disks:
 fdisk -l # list available disks.
-# Note 1: if 'Disklabel type: gpt' is shown; then it means the partition table is MBR(DOS). GPT is 
-#         newer than MBR, so always use it if possible.
-# Note 2: Available partition tables: MBR(DOS)/GPT. (1) For MBR, you can use cfdisk (you cannot use it for
-#         GPT because you won't be able to set a bootable partition). (2) For GPT, you have to use cgdisk.
-# Note 3: IMPORTANT: 20210722 it is possible to convert the drive to GPT even if it was an HDD. 
-#         Just run [cgdisk] and it will ask you to convert to GPT.
+# Note 1: if 'Disklabel type: gpt' is shown; then it means the partition table 
+#         is MBR(DOS). GPT is newer than MBR, so always use it if possible.
+# Note 2: Available partition tables: MBR(DOS)/GPT. (1) For MBR, you can use 
+#         cfdisk (you cannot use it for GPT because you won't be able to set
+#         a bootable partition). (2) For GPT, you have to use cgdisk.
+# Note 3: IMPORTANT: 20210722 it is possible to convert the drive to GPT even if
+#         it was an HDD. Just run [cgdisk] and it will ask you to convert to GPT
 
 lsblk --nodeps # list available disks
 
 # EITHER: run partition manager for MBR:
 cfdisk /dev/sdx
 # create 2 partitions: root[/] and /home; set / as bootable
-# create one for system (root /) and another for /home; make system bootable (create it first so that it takes sdx1). if you create swap partition, change its type to 83.
+# create one for system (root /) and another for /home; make system bootable 
+#  (create it first so that it takes sdx1). if you create swap partition, 
+#  change its type to 83.
 
 # OR: for GPT (SSD):
 cgdisk /dev/sda
@@ -46,7 +51,8 @@ swapon /dev/sdax
 // 3. format all partitions:
 lsblk /dev/sda # list drive partitions
 
-mkfs.fat /dev/sda1 # efi partition has to be formatted as fat (required for [grub-install])
+mkfs.fat /dev/sda1 # efi partition has to be formatted as fat (required for
+#                     [grub-install])
 https://bbs.archlinux.org/viewtopic.php?pid=1882138#p1882138
 mkfs.ext4 /dev/sda2
 mkfs.ext4 /dev/sda3
@@ -59,15 +65,19 @@ mkdir -p /mnt/boot/efi
 mount /dev/sda1 /mnt/boot/efi
 
 // 5. Install base system to root partition (internet required):
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo vim mkinitcpio networkmanager grub efibootmgr # pacstrap is pacman but only for installation.
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo vim
+ mkinitcpio networkmanager grub efibootmgr # pacstrap is pacman but only for 
+#                                             installation.
 
 // generate fstab file (contains info about partitions):
 genfstab -U /mnt >> /mnt/etc/fstab
 
-// AUR support (pamac-aur & yay). Update on 20200622: Don't use it, not supported by archlinux. Also: 20210607: don't use pamac
+// AUR support (pamac-aur & yay). Update on 20200622: Don't use it, not 
+//  supported by archlinux. Also: 20210607: don't use pamac
 # echo -e "\t[spooky_aur]" >> /mnt/etc/pacman.conf
 # echo "SigLevel = Optional TrustAll" >> /mnt/etc/pacman.conf
-# echo -e "Server = https://raw.github.com/spookykidmm/spooky_aur/master/x86_64\n" >> /mnt/etc/pacman.conf
+# echo -e "Server = https://raw.github.com/spookykidmm/spooky_aur/master/x86_64\n"
+#          >> /mnt/etc/pacman.conf
 # sudo pacman -Syy
 # arch-chroot /mnt
 # pacman -Syy
@@ -86,8 +96,11 @@ passwd elias # enter user password
 
 // To mount /home at startup (do this after installation of arch):
 https://wiki.archlinux.org/index.php/Fstab
-# <dump> is checked by the dump(8) utility. This field is usually set to 0, which disables the check.
-# <fsck> sets the order for filesystem checks at boot time; see fsck(8). For the root device it should be 1. For other partitions it should be 2, or 0 to disable checking.
+# <dump> is checked by the dump(8) utility. This field is usually set to 0, 
+#  which disables the check.
+# <fsck> sets the order for filesystem checks at boot time; see fsck(8). For the
+#  root device it should be 1. For other partitions it should be 2, or 0 to 
+#  disable checking.
 blkid # show UUID of different partitions. or:
 df # or:
 lsblk --output NAME,FSTYPE,LABEL,SIZE,UUID,TYPE,FSAVAIL,FSUSE%,MOUNTPOINT
@@ -108,29 +121,38 @@ https://en.wikipedia.org/wiki/Fstab
 https://linux.die.net/man/8/mount
 blkid >> /etc/fstab # this is done only to copy the required UUID
 vim /etc/fstab
-UUID=xxxx-xxxx-xxxx-xxxx /home ext4 rw,auto,async,users,exec,dev,noatime 1 2 # see man mount; no quotation marks
+UUID=xxxx-xxxx-xxxx-xxxx /home ext4 rw,auto,async,users,exec,dev,noatime 1 2 # 
+# see man mount; no quotation marks
 # third: reboot then do: (not necessary to reboot)
 # df
 
 // give use permissions:
 visudo
-elias ALL=(ALL) ALL # either add this line; or uncomment %wheel ALL=(ALL) ALL (keep the %)
+elias ALL=(ALL) ALL # either add this line; or uncomment %wheel ALL=(ALL) ALL 
+#                     (keep the %)
 
 // generate lauguages:
-vim /etc/locale.gen # one line: find your language and uncomment this line [en_GB.UTF-8 UTF-8] (only this line; do not uncomment the ISO line)
+vim /etc/locale.gen # one line: find your language and uncomment this line 
+#                      [en_GB.UTF-8 UTF-8] (only this line; do not uncomment 
+#                      the ISO line)
 locale-gen # generate locales
-localectl set-locale LANG="en_GB.UTF-8" # might not be required (supposed to solve the gnome-terminal startup problem)
+localectl set-locale LANG="en_GB.UTF-8" # solves the gnome-terminal not starting
+#                                          up problem
 https://wiki.archlinux.org/index.php/Installation_guide#Localization
+locale-gen
 
 # set time zone:
 ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
 timedatectl # also: date
-timedatectl set-ntp true # enable internet time synchronisation (now you can get rid of the CMOS battery i.e. on motherboard)
+timedatectl set-ntp true # enable internet time synchronisation (now you can
+#                           get rid of the CMOS battery i.e. on motherboard)
 hwclock --systohc # set hardware clock
-timedatectl set-timezone Europe/London # set timesaving. try: timedatectl list-timezones
+timedatectl set-timezone Europe/London # set timesaving. try: 
+#                                        timedatectl list-timezones
 # timedatectl set-time "2020-04-14 09:07:00" # set time and date manually
 # do not use UTC time (no timesaving/timezone)
-# For automatic time synchronisation, you can either use ntp or systemd-timesyncd (default). For NTP (not needed):
+# For automatic time synchronisation, you can either use ntp or
+#  systemd-timesyncd (default). For NTP (not needed):
 #  sudo pacman -S ntp
 #  sudo ntpd -u ntp:ntp
 #  sudo systemctl enable ntpdate.service
@@ -147,25 +169,30 @@ mkinitcpio -p linux # generate an init file that grup will use to load linux
 # grub-install /dev/sda # install grub to the harddrive (NOT the partition)
 
 # Or (if using GPT):
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --removable # note the partition is not required. see:
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+ --removable # note the partition is not required. see:
 https://wiki.archlinux.org/index.php/GRUB#Installation_2
 
 grub-mkconfig -o /boot/grub/grub.cfg # create the grup config file
 exit # exit chroot session
 
 // install packages for video, audio, drivers:
-pacstrap /mnt xorg-server xorg-twm xorg-apps xorg-drivers xterm alsa-utils pulseaudio pulseaudio-alsa intel-ucode nm-connection-editor polkit-gnome xf86-input-libinput b43-fwcutter gnome-keyring mesa # mesa might be already installed.
+pacstrap /mnt xorg-server xorg-twm xorg-apps xorg-drivers xterm alsa-utils 
+ pulseaudio pulseaudio-alsa intel-ucode nm-connection-editor polkit-gnome 
+ xf86-input-libinput b43-fwcutter gnome-keyring mesa
 
 # install networking and other utilities
-pacstrap /mnt network-manager-applet xdg-user-dirs gvfs ttf-dejavu inetutils usbutils xfsprogs sysfsutils
+pacstrap /mnt network-manager-applet xdg-user-dirs gvfs ttf-dejavu inetutils 
+ usbutils xfsprogs sysfsutils
 
 # install a desktop manager & desktop environment
-pacstrap /mnt lxde # includes lxdm. what is lxdm-gtk3?
+pacstrap /mnt lxdm awesome # no need to install lxde (which includes lxdm);
+#                            install awesome directly. what is lxdm-gtk3?
 
 // Starting services:
 arch-chroot /mnt
 systemctl enable NetworkManager
-systemctl enable lxdm.service
+systemctl enable lxdm.service # login manager (display manager)
 pacman -S --noconfirm vlc git rsync # install rest of packages here
 exit # exit chroot
 
@@ -185,7 +212,8 @@ Defaults targetpw # (uncomment this line)
 sudo passwd root # HailMary
 # source: https://wiki.archlinux.org/index.php/Sudo#Root_password
 
-// require sudo password when installing from pamac (update 20210607: uninstall pamac entirely instead)
+// require sudo password when installing from pamac (update 20210607: 
+//  uninstall pamac entirely instead)
 # create the file:
 /etc/polkit-1/rules.d/49-rootpw_global.rules
 # containing:

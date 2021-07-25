@@ -188,6 +188,7 @@ pacstrap /mnt network-manager-applet xdg-user-dirs gvfs ttf-dejavu inetutils
 # install a desktop manager & desktop environment
 pacstrap /mnt lxdm awesome # no need to install lxde (which includes lxdm);
 #                            install awesome directly. what is lxdm-gtk3?
+#                          # or install lightdm
 
 // Starting services:
 arch-chroot /mnt
@@ -212,6 +213,12 @@ Defaults targetpw # (uncomment this line)
 sudo passwd root # HailMary
 # source: https://wiki.archlinux.org/index.php/Sudo#Root_password
 
+// disable quiet boot (to show boot messages on startup):
+sudo vim /etc/default/grub
+# GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3" # remove quiet
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+https://wiki.archlinux.org/index.php/Kernel_parameters#GRUB
+
 // require sudo password when installing from pamac (update 20210607: 
 //  uninstall pamac entirely instead)
 # create the file:
@@ -223,24 +230,10 @@ sudo passwd root # HailMary
 polkit.addAdminRule(function(action, subject) {
     return ["unix-user:root"];
 });
-# source: https://wiki.archlinux.org/index.php/Polkit#Administrator_identities
-
-// disable quiet boot (to show boot messages on startup):
-sudo vim /etc/default/grub
-# GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3" # remove quiet
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-https://wiki.archlinux.org/index.php/Kernel_parameters#GRUB
+# source:
+https://wiki.archlinux.org/index.php/Polkit#Administrator_identities
 
 // Other:
-# disable speaker:
-xset -b # xset is the xorg settings manager
-
-# disable screen sleeping:
-xset dpms 0 0 0 # set power saving times to infinity
-xset -dpms # turn off display power saving
-xset s off # turn off screen saver
-xset q # display current settings
-
 https://wiki.archlinux.org/index.php/Display_Power_Management_Signaling
 xset dpms force suspend # turn off monitor
 

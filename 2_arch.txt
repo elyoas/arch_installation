@@ -1,27 +1,26 @@
 // When reinstalling Arch:
-# 00. Set Samsung screen: blue light to 0%; red 60%; green 55%
-# 0. Note: give /home a separate partition. give / 40GB and /home the rest.
-#    Either name the user the same name as the old user; or rename /home/elias before installation.
-# 1. Install Arch from [arch-install.txt] script
-# 2. ALWAYS restore files using same backup command (rsync)
+# 1. Set Samsung screen: blue light to 0%; red 60%; green 55%
+# 2. Install Arch from [arch-install.txt] script + ALWAYS restore files using 
+#    same backup command (rsync)
 # 3. make: highlighter
-# 4. don't use snapd. Don't be enslaved/hooked/addicted to updates nor to 3rd party companies.
-# 5. nautilus-typeahead: (download it from AUR as the community version 3.34.0-1 with sudo pacman -S nautilus-typeahead is broken):
-	nautilus-typeahead  3.34.2-1 # install gnome-terminal-transparency then reboot to enable terminal opening
+# 4. nautilus-typeahead: (download it from AUR as the community version 
+#       3.34.0-1 with sudo pacman -S nautilus-typeahead is broken):
+	nautilus-typeahead  3.34.2-1 
+	# install gnome-terminal-transparency then reboot for terminal opening
 	# view Modified date below files; not size (from settings)
-# 7. enable scrollbars: add this line to ~/.config/gtk-3.0/settings.ini
+# 5. enable scrollbars: add this line to ~/.config/gtk-3.0/settings.ini
 	gtk-overlay-scrolling=0
 	gtk-primary-button-warps-slider=1
-# 8. set notifications settings:
+# 6. set notifications settings:
 	mkdir ~/.config/dunst && cp /usr/share/dunst/dunstrc ~/.config/dunst
-# 9. pcmanfm preferences -> volume management -> show available options.. [disable]
-# 11. sudo vim /boot/loader/loader.conf # reduce grub bootloader countdown to 1; 
+# 7. sudo vim /boot/loader/loader.conf # reduce grub bootloader countdown to 1; 
       # this is for [systemd-boot] bootloader (shows 2 options in mid screen).
       # for GRUB: sudo vim /boot/grub/grub.cfg # look for timeout. see:
       https://bbs.archlinux.org/viewtopic.php?id=251950
-# 12. update calculator icon (all this is not needed anymore):
+# 8. update calculator icon (all this is not needed anymore):
 sudo rm -f /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
-sudo cp /usr/share/icons/hicolor/scalable/apps/org.gnome.Calculator.svg /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
+sudo cp /usr/share/icons/hicolor/scalable/apps/org.gnome.Calculator.svg
+        /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
 # change ones you don't like eg:
 # sudo rm /usr/share/icons/breeze/apps/48/okular.svg
 # sudo rm /usr/share/icons/breeze-dark/apps/48/okular.svg
@@ -35,12 +34,11 @@ sudo rm /usr/share/icons/hicolor/32x32/apps/chromium.png
 sudo rm /usr/share/icons/hicolor/24x24/apps/chromium.png
 sudo rm /usr/share/icons/hicolor/16x16/apps/chromium.png
 
-# 13. dconf > /org/gnome/gnome-screenshot/auto-save-directory > file:///home/elias/Downloads
-
-# 14. 
+# 9. Uninstall:
 pip uninstall pip # remove it from all existing conda environments
+sudo pacman -R snapd # don't be enslaved/hooked/addicted to updates or 3rd party companies.
 
-# 15. to install a desktop (allow desktop icons) on awesome:
+# 10. to install a desktop (allow desktop icons) on awesome:
 sudo pacman -S pcmanfm
 
 // AUR:
@@ -123,6 +121,7 @@ okular # bug: https://bugs.kde.org/show_bug.cgi?id=305534
 # https://gitlab.freedesktop.org/poppler/poppler/-/issues/362
 shutter # best available screenshot app. gnome-screenshot
 # better than xfce4-screenshooter. gnome-screenshot -a # area. gnome-screenshot -i # interactive
+# dconf > /org/gnome/gnome-screenshot/auto-save-directory > file:///home/elias/Downloads
 
 // Other:
 linux53-virtualbox-host-modules # 5x has to match your kernel; see:

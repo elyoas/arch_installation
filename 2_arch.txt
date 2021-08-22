@@ -1,22 +1,29 @@
 // When reinstalling Arch:
 # 1. Set Samsung screen: blue light to 0%; red 60%; green 55%
+
 # 2. Install Arch from [arch-install.txt] script + ALWAYS restore files using 
 #    same backup command (rsync)
+
 # 3. make: highlighter
+
 # 4. nautilus-typeahead: (download it from AUR as the community version 
 #       3.34.0-1 with sudo pacman -S nautilus-typeahead is broken):
 	nautilus-typeahead  3.34.2-1 
 	# install gnome-terminal-transparency then reboot for terminal opening
 	# view Modified date below files; not size (from settings)
+
 # 5. enable scrollbars: add this line to ~/.config/gtk-3.0/settings.ini
 	gtk-overlay-scrolling=0
 	gtk-primary-button-warps-slider=1
+
 # 6. set notifications settings:
 	mkdir ~/.config/dunst && cp /usr/share/dunst/dunstrc ~/.config/dunst
+
 # 7. sudo vim /boot/loader/loader.conf # reduce grub bootloader countdown to 1; 
       # this is for [systemd-boot] bootloader (shows 2 options in mid screen).
       # for GRUB: sudo vim /boot/grub/grub.cfg # look for timeout. see:
       https://bbs.archlinux.org/viewtopic.php?id=251950
+
 # 8. update calculator icon (all this is not needed anymore):
 sudo rm -f /usr/share/icons/hicolor/symbolic/apps/org.gnome.Calculator-symbolic.svg
 sudo cp /usr/share/icons/hicolor/scalable/apps/org.gnome.Calculator.svg
@@ -83,14 +90,16 @@ gradio: # https://github.com/haecker-felix/gradio/releases/
 e2guardian: # https://github.com/e2guardian/e2guardian/releases
 # https://groups.google.com/forum/#!topic/e2guardian/M8s4i9ggPbI
 awesome: # https://github.com/awesomewm/awesome
+thunderbird # use 60.9.1
 
 // Programs:
-sudo pacman -S audacity calibre catfish chromium dconf-editor dunst easytag eog
- evince ffmpegthumbnailer gedit gnote gparted gimp git gnome-font-viewer gnome-calculator
- gnome-disk-utility gnome-system-monitor gnome-calendar inkscape keepassxc kdenlive
- kid3 libreoffice mtpfs gvfs-mtp okular oath-toolkit pdfarranger rsync slock
- texstudio texlive-most thunderbird vim vlc xdotool xclip youtube-dl ntp
- colordiff feh simplescreenrecorder picom digikam rofi shutter
+sudo pacman -S audacity calibre catfish chromium dconf-editor dunst easytag eog youtube-dl rofi \
+ evince ffmpegthumbnailer gedit gnote gparted gimp git gnome-font-viewer gnome-calculator xclip \
+ gnome-disk-utility gnome-system-monitor gnome-calendar inkscape keepassxc kdenlive shutter \
+ kid3 libreoffice mtpfs gvfs-mtp okular oath-toolkit pdfarranger rsync slock colordiff feh ntp htop vlc \
+ texstudio texlive-most vim xdotool simplescreenrecorder picom digikam signal-desktop
+
+TODO: find a clipboad manager: https://wiki.archlinux.org/title/Clipboard
 
 // Description of some programs above:
 calibre # epub reading & converting to pdf
@@ -115,13 +124,14 @@ vlc # use it for radio too (bbcr3 + classicfm). Also: [rhythmbox], [cantata],
 # [github.com/audacious-media-player/audacious], [github.com/exaile/exaile/]
 # https://code.videolan.org/videolan/vlc/raw/master/NEWS
 xdotool # pasting date
-xclip   # pasting date (copy into clipboard)
+xclip # pasting date (copy into clipboard)
 digikam # more advanced than [shotwell]
 okular # bug: https://bugs.kde.org/show_bug.cgi?id=305534
 # https://gitlab.freedesktop.org/poppler/poppler/-/issues/362
 shutter # best available screenshot app. gnome-screenshot
 # better than xfce4-screenshooter. gnome-screenshot -a # area. gnome-screenshot -i # interactive
 # dconf > /org/gnome/gnome-screenshot/auto-save-directory > file:///home/elias/Downloads
+signal-desktop # launch it from terminal to connect it to proxy
 
 // Other:
 linux53-virtualbox-host-modules # 5x has to match your kernel; see:
@@ -137,12 +147,12 @@ gnome-do # change to [kupfer] which is better when updated beyond v319:
 darktable # photo management (similar to adobe lightroom). (I'm not using it)
 orage # simple calendar. another exists in lxpanel if using LXDE. Awesomewm contains calendar
 cbatticon # Lenovo battery icon (not needed, percentage can be displayed in awesome)
-parcellite # [UPDATE: NOT REQUIRED as long as lxsession is running along awesomewm] 
+parcellite # does not maintain copy after file is closed
 # (copy does not persist in awesomewm after a window is closed).
 # Clipman is the XFCE clipboard manager. See:
 https://wiki.archlinux.org/index.php/clipboard#Managers 
 sudo pacman -S base-devel # ubuntu equivalent: build-essential; includes g++ (cpp compiler)
-sudo pacman -S cmake htop qtcreator
+sudo pacman -S cmake qtcreator
 ubuntu-restricted-extras # ubuntu, installs Microsoft Web fonts
 lm-sensors # show cpu temperature; command: 'sensors'
 xautomation # installs xte; unsupported on wayland. remap mouse buttons, see [.xbindkeysrc]

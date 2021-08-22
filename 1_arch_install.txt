@@ -213,6 +213,12 @@ Defaults targetpw # (uncomment this line)
 sudo passwd root # HailMary
 # source: https://wiki.archlinux.org/index.php/Sudo#Root_password
 
+// extend sudo password time (30 minutes):
+https://bbs.archlinux.org/viewtopic.php?id=198042
+https://wiki.archlinux.org/title/Sudo#Reduce_the_number_of_times_you_have_to_type_a_password
+sudo vim /etc/sudoers
+Defaults timestamp_timeout=30
+
 // disable quiet boot (to show boot messages on startup):
 sudo vim /etc/default/grub
 # GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3" # remove quiet

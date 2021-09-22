@@ -40,8 +40,8 @@ cfdisk /dev/sdx
 
 # OR: for GPT (SSD):
 cgdisk /dev/sda
-# create 3 partitions (1)efi: 512MB, code:ef00; (512 * 2048 = 1048576)
-#                     (2)root: 40GB, code:8300; (40*1000*2048=81920000)
+# create 3 partitions (1)efi: 512MB, code:ef00; (512 * 2048 = 1048 576)
+#                     (2)root: 40GB, code:8300; (40*1000*2048=8192 0000)
 #                     (3)home: rest, code:8302
 
 // 2. optional: if you create swap partition above, make swap file & utilise it:
@@ -200,9 +200,6 @@ exit # exit chroot
 # Finish:
 umount -R /mnt # unmount drive recursively
 poweroff # reboot
-
-// Important: remove xf86.video-intel to get rid of xorg issues
-https://bbs.archlinux.org/viewtopic.php?pid=1884680#p1884680
 
 // * * * * * * * * * * * * * * * * * *
 

@@ -2,13 +2,19 @@
 # to run Arch, you have to disable 'secure boot' from BIOS. You can then put the
 #  ssd directly from PC and it will work.
 
+// for encrypting the root partition, refer to:
+https://www.youtube.com/watch?v=SFzN6e7USGk
+
 // 0. Installation instructions & iso download:
 https://wiki.archlinux.org/index.php/Installation_guide
 
-https://www.archlinux.org/download/ # download iso
-pacman-key -v archlinux-version-x86_64.iso.sig # verify signature:
-sudo dd bs=4M if=archlinux-2020.12.01-x86_64.iso of=/dev/sdb1 status=progress 
- oflag=sync # create bootable flash disk 
+# download iso:
+https://www.archlinux.org/download/
+# verify signature:
+pacman-key -v archlinux-version-x86_64.iso.sig
+# create bootable flash disk:
+sudo fdisk -l
+sudo dd bs=4M if=archlinux-2020.12.01-x86_64.iso of=/dev/sdb1 status=progress oflag=sync
 https://wiki.archlinux.org/title/USB_flash_installation_medium#Using_basic_command_line_utilities
 
 # other sources:
@@ -65,24 +71,11 @@ mkdir -p /mnt/boot/efi
 mount /dev/sda1 /mnt/boot/efi
 
 // 5. Install base system to root partition (internet required):
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo vim
- mkinitcpio networkmanager grub efibootmgr # pacstrap is pacman but only for 
-#                                             installation.
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo vim mkinitcpio
+  networkmanager grub efibootmgr # pacstrap is pacman but only for installation
 
 // generate fstab file (contains info about partitions):
 genfstab -U /mnt >> /mnt/etc/fstab
-
-// AUR support (pamac-aur & yay). Update on 20200622: Don't use it, not 
-//  supported by archlinux. Also: 20210607: don't use pamac
-# echo -e "\t[spooky_aur]" >> /mnt/etc/pacman.conf
-# echo "SigLevel = Optional TrustAll" >> /mnt/etc/pacman.conf
-# echo -e "Server = https://raw.github.com/spookykidmm/spooky_aur/master/x86_64\n"
-#          >> /mnt/etc/pacman.conf
-# sudo pacman -Syy
-# arch-chroot /mnt
-# pacman -Syy
-# pacman -S --noconfirm pamac-aur yay
-# exit # exit chroot
 
 // take full access:
 arch-chroot /mnt
@@ -128,27 +121,23 @@ UUID=xxxx-xxxx-xxxx-xxxx /home ext4 rw,auto,async,users,exec,dev,noatime 1 2 #
 
 // give use permissions:
 visudo
-elias ALL=(ALL) ALL # either add this line; or uncomment %wheel ALL=(ALL) ALL 
-#                     (keep the %)
+elias ALL=(ALL) ALL # either add this line; or uncomment %wheel ALL=(ALL) ALL (keep the %)
 
 // generate lauguages:
-vim /etc/locale.gen # one line: find your language and uncomment this line 
-#                      [en_GB.UTF-8 UTF-8] (only this line; do not uncomment 
-#                      the ISO line)
+vim /etc/locale.gen # one line: find your language and uncomment this line  [en_GB.UTF-8 UTF-8]
+#                      (only this line; do not uncomment the ISO line)
 locale-gen # generate locales
-localectl set-locale LANG="en_GB.UTF-8" # solves the gnome-terminal not starting
-#                                          up problem
+localectl set-locale LANG="en_GB.UTF-8" # solves the gnome-terminal not starting up problem
 https://wiki.archlinux.org/index.php/Installation_guide#Localization
 locale-gen
 
 # set time zone:
 ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
 timedatectl # also: date
-timedatectl set-ntp true # enable internet time synchronisation (now you can
-#                           get rid of the CMOS battery i.e. on motherboard)
+timedatectl set-ntp true # enable internet time synchronisation (now you can get rid of the
+#                                    CMOS battery i.e. on motherboard)
 hwclock --systohc # set hardware clock
-timedatectl set-timezone Europe/London # set timesaving. try: 
-#                                        timedatectl list-timezones
+timedatectl set-timezone Europe/London # set timesaving. try: timedatectl list-timezones
 # timedatectl set-time "2020-04-14 09:07:00" # set time and date manually
 # do not use UTC time (no timesaving/timezone)
 # For automatic time synchronisation, you can either use ntp or
@@ -187,8 +176,7 @@ pacstrap /mnt network-manager-applet xdg-user-dirs gvfs ttf-dejavu inetutils
 
 # install a desktop manager & desktop environment
 pacstrap /mnt lxdm awesome # no need to install lxde (which includes lxdm);
-#                            install awesome directly. what is lxdm-gtk3?
-#                          # or install lightdm
+#                            install awesome directly. what is lxdm-gtk3? or install lightdm
 
 // Starting services:
 arch-chroot /mnt
@@ -201,42 +189,4 @@ exit # exit chroot
 umount -R /mnt # unmount drive recursively
 poweroff # reboot
 
-// * * * * * * * * * * * * * * * * * *
-
-// Make sudo require password of root, not current user's password
-sudo vim /etc/sudoers
-Defaults targetpw # (uncomment this line)
-# now change root password by:
-sudo passwd root # HailMary
-# source: https://wiki.archlinux.org/index.php/Sudo#Root_password
-
-// extend sudo password time (30 minutes):
-https://bbs.archlinux.org/viewtopic.php?id=198042
-https://wiki.archlinux.org/title/Sudo#Reduce_the_number_of_times_you_have_to_type_a_password
-sudo vim /etc/sudoers
-Defaults timestamp_timeout=30
-
-// disable quiet boot (to show boot messages on startup):
-sudo vim /etc/default/grub
-# GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3" # remove quiet
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-https://wiki.archlinux.org/index.php/Kernel_parameters#GRUB
-
-// require sudo password when installing from pamac (update 20210607: 
-//  uninstall pamac entirely instead)
-# create the file:
-/etc/polkit-1/rules.d/49-rootpw_global.rules
-# containing:
-/* Always authenticate Admins by prompting for the root
- * password, similar to the rootpw option in sudo
- */
-polkit.addAdminRule(function(action, subject) {
-    return ["unix-user:root"];
-});
-# source:
-https://wiki.archlinux.org/index.php/Polkit#Administrator_identities
-
-// Other:
-https://wiki.archlinux.org/index.php/Display_Power_Management_Signaling
-xset dpms force suspend # turn off monitor
 
